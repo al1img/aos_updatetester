@@ -1,0 +1,49 @@
+syntax = "proto3";
+ 
+option go_package = "gitpct.epam.com/epmd-aepr/aos_common/api/updatemanager";
+ 
+package updatemanager;
+ 
+service UpdateController {
+    rpc RegisterUM(stream UpdateStatus) returns (stream SmMessages) {}
+}
+ 
+message SmMessages {
+    oneof SmMessage {
+        PrepareUpdate prepare_update = 1;
+        StartUpdate start_update = 2;
+        ApplyUpdate apply_update = 3;
+        RevertUpdate revert_update = 4;
+    }
+}
+ 
+// SM messages
+ 
+message PrepareUpdate {
+    string url = 1;
+    uint64 version = 2;
+}
+ 
+message StartUpdate {
+}
+ 
+message ApplyUpdate {
+}
+ 
+message RevertUpdate {
+}
+ 
+// UM messages
+ 
+enum UmState {
+    IDLE = 0;
+    PREPARED = 1; 
+    UPDATED = 2;
+    FAILED = 3;
+}
+ 
+message UpdateStatus {
+    string um_id = 1;
+    UmState um_state = 2 ;
+    string error = 3 ;
+}
